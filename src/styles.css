@@ -1,14 +1,14 @@
 /* Main container */
 .app-container {
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: rgba(19, 51, 32, 0.91);
 }
 
 /* Header styles */
 .header {
-  background-color: white;
+  background-color: rgba(19, 51, 32, 0.91);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb00;
 }
 
 .header-content {
@@ -26,16 +26,16 @@
 .header-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1f2937;
+  color: #ffffff;
 }
 
 .header-subtitle {
-  color: #6b7280;
+  color: #ffffff;
 }
 
 .new-item-button {
-  background-color: #3b82f6;
-  color: black;
+  background-color: #ffffff;
+  color: rgb(14, 68, 7);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   display: flex;
@@ -47,13 +47,16 @@
 }
 
 .new-item-button:hover {
-  background-color: #2563eb;
+  background-color: #062b15;
+  color: rgb(255, 255, 255);
+  border-bottom: 1px solid #ebedf1;
 }
 
 /* Tabs styles */
 .tabs-container {
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
+  background-color: rgba(19, 51, 32, 0.91);
+  border-bottom: 1px solid #ebedf1;
+  max-width: 100rem;
 }
 
 .tabs-content {
@@ -74,8 +77,8 @@
   gap: 0.5rem;
   padding: 1rem 0.75rem;
   border-bottom: 2px solid transparent;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 00;
   transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
   white-space: nowrap;
   background: none;
@@ -86,8 +89,8 @@
 }
 
 .tab-button.active {
-  border-bottom-color: #3b82f6;
-  color: #2563eb;
+  border-bottom-color: #ffffff;
+  color: #ffffff;
 }
 
 .tab-button.inactive {
@@ -101,15 +104,15 @@
 
 .tab-count {
   background-color: #f3f4f6;
-  color: #6b7280;
+  color: #000000;
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 1rem;
 }
 
 /* Main content */
 .main-content {
-  max-width: 80rem;
+  max-width: 100rem;
   margin: 0 auto;
   padding: 1rem;
 }

@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, Save, X, AlertCircle, CheckCircle, Users, FileText, Package, TestTube, Dna } from 'lucide-react';
-import './styles.css'; // Import the CSS file
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import UserMenu from './components/auth/UserMenu';
+import './styles.css';
+import './auth.css'; // Importar estilos de autenticación
 
-const App = () => {
+const AppContent = () => {
+  const { apiRequest, user } = useAuth(); // Usar el contexto de autenticación
+  
   // Main state
   const [activeTab, setActiveTab] = useState('requests');
   const [data, setData] = useState({
@@ -23,10 +29,7 @@ const App = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({});
 
-  // API configuration - CHANGE THIS URL
-  const API_BASE_URL = 'http://localhost:8000/api';
-
-  // Tab and form configuration
+  // Tab and form configuration (mantener igual)
   const tabConfig = {
     requesters: {
       title: 'Requesters',
@@ -129,32 +132,7 @@ const App = () => {
     }
   };
 
-  // Función para hacer peticiones a la API
-  const apiRequest = async (endpoint, options = {}) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        ...options,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (err) {
-      throw new Error(`Error de conexión: ${err.message}`);
-    }
-  };
-
-  // Cargar datos al montar el componente
-  useEffect(() => {
-    fetchAllData();
-  }, []);
-
-  // Load all data
+  // Load all data usando apiRequest autenticado
   const fetchAllData = async () => {
     setLoading(true);
     setError('');
@@ -163,7 +141,6 @@ const App = () => {
         Object.entries(tabConfig).map(async ([key, config]) => {
           try {
             const result = await apiRequest(config.endpoint);
-            // Handle different API response formats
             const items = Array.isArray(result) ? result : (result.results || result.data || []);
             console.log(`Loaded ${key}:`, items);
             return [key, items];
@@ -183,7 +160,12 @@ const App = () => {
     }
   };
 
-  // Create new item
+  // Cargar datos al montar el componente
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  // Create new item usando apiRequest autenticado
   const createItem = async (itemData) => {
     setLoading(true);
     setError('');
@@ -194,7 +176,6 @@ const App = () => {
         body: JSON.stringify(itemData),
       });
       
-      // Ensure we're working with arrays
       setData(prev => ({
         ...prev,
         [activeTab]: Array.isArray(prev[activeTab]) 
@@ -210,7 +191,7 @@ const App = () => {
     }
   };
 
-  // Update existing item
+  // Update existing item usando apiRequest autenticado
   const updateItem = async (id, itemData) => {
     setLoading(true);
     setError('');
@@ -221,7 +202,6 @@ const App = () => {
         body: JSON.stringify(itemData),
       });
       
-      // Ensure we're working with arrays
       setData(prev => ({
         ...prev,
         [activeTab]: Array.isArray(prev[activeTab])
@@ -237,7 +217,7 @@ const App = () => {
     }
   };
 
-  // Delete item
+  // Delete item usando apiRequest autenticado
   const deleteItem = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) {
       return;
@@ -251,7 +231,6 @@ const App = () => {
         method: 'DELETE',
       });
       
-      // Ensure we're working with arrays
       setData(prev => ({
         ...prev,
         [activeTab]: Array.isArray(prev[activeTab])
@@ -314,7 +293,6 @@ const App = () => {
     const items = data[activeTab];
     const config = tabConfig[activeTab];
     
-    // Ensure items is an array
     if (!Array.isArray(items)) {
       console.log('Items is not an array:', items);
       return [];
@@ -353,7 +331,6 @@ const App = () => {
     const items = data[optionsKey];
     const config = tabConfig[optionsKey];
     
-    // Ensure items is an array
     if (!Array.isArray(items)) {
       return [];
     }
@@ -370,25 +347,30 @@ const App = () => {
 
   return (
     <div className="app-container">
-      {/* Header */}
+      {/* Header con información de usuario */}
       <div className="header">
         <div className="header-content">
           <div className="header-flex">
             <div>
               <h1 className="header-title">Biological Sample Management System</h1>
               <p className="header-subtitle">Manage requesters, requests, metadata, and samples</p>
+              <p className="user-welcome">Bienvenido, {user?.first_name} {user?.last_name || user?.username}!</p>
             </div>
-            <button
-              onClick={() => initForm()}
-              className="new-item-button"
-            >
-              <Plus size={20} />
-              New {currentConfig.title.slice(0, -1)}
-            </button>
+            <div className="header-actions">
+              <button
+                onClick={() => initForm()}
+                className="new-item-button"
+              >
+                <Plus size={20} />
+                New {currentConfig.title.slice(0, -1)}
+              </button>
+              <UserMenu />
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Resto del componente igual... */}
       {/* Tabs */}
       <div className="tabs-container">
         <div className="tabs-content">
@@ -594,6 +576,17 @@ const App = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Componente principal con AuthProvider
+const App = () => {
+  return (
+    <AuthProvider>
+      <ProtectedRoute>
+        <AppContent />
+      </ProtectedRoute>
+    </AuthProvider>
   );
 };
 
