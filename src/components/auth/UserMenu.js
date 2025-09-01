@@ -37,12 +37,8 @@ const UserMenu = () => {
                 </div>
                 <div className="user-info">
                     <span className="user-name">
-                        {user?.first_name && user?.last_name 
-                            ? `${user.first_name} ${user.last_name}`
-                            : user?.username
-                        }
+                        {user?.username}
                     </span>
-                    <span className="user-email">{user?.email}</span>
                 </div>
                 <ChevronDown size={16} className={`dropdown-icon ${isOpen ? 'open' : ''}`} />
             </button>
@@ -55,12 +51,8 @@ const UserMenu = () => {
                         </div>
                         <div>
                             <div className="user-name">
-                                {user?.first_name && user?.last_name 
-                                    ? `${user.first_name} ${user.last_name}`
-                                    : user?.username
-                                }
+                                {user?.username}
                             </div>
-                            <div className="user-email">{user?.email}</div>
                         </div>
                     </div>
 

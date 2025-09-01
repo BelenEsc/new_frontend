@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
         return (
             <div className="loading-screen">
                 <div className="loading-spinner large"></div>
-                <p>Verificando autenticación...</p>
+                <p>Authentication verification ...</p>
             </div>
         );
     }
@@ -19,8 +19,8 @@ const ProtectedRoute = ({ children }) => {
         return (
             <div className="auth-required-screen">
                 <div className="auth-required-content">
-                    <h1>Acceso Restringido</h1>
-                    <p>Necesitas iniciar sesión para acceder a esta aplicación</p>
+                    <h1>Restricted access</h1>
+                    <p>You need to login </p>
                     <AuthModal isOpen={true} onClose={() => {}} />
                 </div>
             </div>

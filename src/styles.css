@@ -1,23 +1,24 @@
 /* Main container */
 .app-container {
   min-height: 100vh;
-  background-color: rgba(19, 51, 32, 0.91);
+  background-color: #00434c;
 }
 
 /* Header styles */
 .header {
-  background-color: rgba(19, 51, 32, 0.91);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid #e5e7eb00;
+  background-color: #00434c;
+  box-shadow: 0 1px 2px 0 rgba(230, 223, 223, 0.05);
+  border-bottom: 1px solid #eaedf300;
 }
 
 .header-content {
-  max-width: 80rem;
+  max-width: 100rem;
   margin: 0 auto;
   padding: 1rem;
 }
 
 .header-flex {
+  background-color: #00434c;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,19 +45,49 @@
   transition: background-color 0.15s ease-in-out;
   border: none;
   cursor: pointer;
+  margin-bottom: 8px;
 }
 
 .new-item-button:hover {
-  background-color: #062b15;
+  background-color: #00434c;
   color: rgb(255, 255, 255);
   border-bottom: 1px solid #ebedf1;
 }
 
+
+
+
+.user-menu-trigger {
+  background-color: #ffffff;
+  color: #00434c;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.15s ease-in-out;
+  border: none;
+  
+  cursor: pointer;
+}
+
+.user-menu-trigger:hover {
+  background-color: #00434c;
+  color: rgb(255, 255, 255);
+  border-bottom: 1px solid #ebedf1;
+}
+
+
+
+
+
+
+
+
 /* Tabs styles */
 .tabs-container {
-  background-color: rgba(19, 51, 32, 0.91);
+  background-color: #00434c;
   border-bottom: 1px solid #ebedf1;
-  max-width: 100rem;
+  max-width: 111rem;
 }
 
 .tabs-content {
@@ -66,6 +97,7 @@
 }
 
 .tabs-flex {
+  background-color: #00434c;
   display: flex;
   gap: 2rem;
   overflow-x: auto;
@@ -171,7 +203,7 @@
 .success-message {
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
-  color: #166534;
+  color: #00434c;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1rem;

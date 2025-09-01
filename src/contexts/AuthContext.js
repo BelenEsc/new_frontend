@@ -128,16 +128,135 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
             console.log('Register successful:', data);
 
-            setUser(data.user);
-            setToken(data.token);
-            
-            // Guardar en localStorage
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            
-            return { success: true, message: data.message };
+            // No establecer usuario/token automáticamente ya que necesita verificar email
+            return { 
+                success: true, 
+                message: data.message,
+                requiresVerification: data.requires_verification 
+            };
         } catch (error) {
             console.error('Register error:', error);
+            return { success: false, message: error.message };
+        }
+    };
+
+    // Verificar email
+    const verifyEmail = async (token) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/verify-email/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Error verificando email';
+                try {
+                    const error = await response.json();
+                    errorMessage = error.detail || error.message || JSON.stringify(error);
+                } catch (e) {
+                    errorMessage = `Error ${response.status}: ${response.statusText}`;
+                }
+                return { success: false, message: errorMessage };
+            }
+
+            const data = await response.json();
+            return { success: true, message: data.message };
+        } catch (error) {
+            return { success: false, message: error.message };
+        }
+    };
+
+    // Reenviar verificación
+    const resendVerification = async (email) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/resend-verification/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Error reenviando verificación';
+                try {
+                    const error = await response.json();
+                    errorMessage = error.detail || error.message || JSON.stringify(error);
+                } catch (e) {
+                    errorMessage = `Error ${response.status}: ${response.statusText}`;
+                }
+                return { success: false, message: errorMessage };
+            }
+
+            const data = await response.json();
+            return { success: true, message: data.message };
+        } catch (error) {
+            return { success: false, message: error.message };
+        }
+    };
+
+    // Solicitar reset de contraseña
+    const requestPasswordReset = async (email) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/password-reset/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Error solicitando reset';
+                try {
+                    const error = await response.json();
+                    errorMessage = error.detail || error.message || JSON.stringify(error);
+                } catch (e) {
+                    errorMessage = `Error ${response.status}: ${response.statusText}`;
+                }
+                return { success: false, message: errorMessage };
+            }
+
+            const data = await response.json();
+            return { success: true, message: data.message };
+        } catch (error) {
+            return { success: false, message: error.message };
+        }
+    };
+
+    // Confirmar reset de contraseña
+    const confirmPasswordReset = async (uid, token, newPassword, confirmPassword) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/password-reset-confirm/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    uid, 
+                    token, 
+                    new_password: newPassword,
+                    confirm_password: confirmPassword
+                }),
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Error cambiando contraseña';
+                try {
+                    const error = await response.json();
+                    errorMessage = error.detail || error.message || JSON.stringify(error);
+                } catch (e) {
+                    errorMessage = `Error ${response.status}: ${response.statusText}`;
+                }
+                return { success: false, message: errorMessage };
+            }
+
+            const data = await response.json();
+            return { success: true, message: data.message };
+        } catch (error) {
             return { success: false, message: error.message };
         }
     };
@@ -226,6 +345,10 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         apiRequest,
+        verifyEmail,
+        resendVerification,
+        requestPasswordReset,
+        confirmPasswordReset,
         isAuthenticated: !!user && !!token,
     };
 

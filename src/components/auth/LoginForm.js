@@ -1,9 +1,10 @@
 // src/components/auth/LoginForm.js
 import React, { useState } from 'react';
-import { LogIn, User, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { LogIn, User, Lock, Eye, EyeOff, AlertCircle, Mail } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import '../../LoginForm.css'; // Importa el CSS separado
 
-const LoginForm = ({ onSwitchToRegister, onClose }) => {
+const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword, onClose }) => {
     const { login } = useAuth();
     const [formData, setFormData] = useState({
         username: '',
@@ -21,7 +22,7 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
         const result = await login(formData.username, formData.password);
         
         if (result.success) {
-            onClose(); // Cerrar modal
+            onClose(); // close modal
         } else {
             setError(result.message);
         }
@@ -34,26 +35,45 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
             ...formData,
             [e.target.name]: e.target.value
         });
+        
+        // clean errors 
+        if (error) {
+            setError('');
+        }
     };
 
     return (
         <div className="auth-form">
             <div className="auth-header">
                 <LogIn size={32} className="auth-icon" />
-                <h2>Iniciar Sesión</h2>
-                <p>Accede a tu cuenta para continuar</p>
+                <h2>Login</h2>
+                <p>Log in to your account to continue</p>
             </div>
 
             {error && (
                 <div className="error-message">
                     <AlertCircle size={16} />
-                    {error}
+                    <div>
+                        {error}
+                        {error.includes('Verify your email') && (
+                            <div className="error-actions">
+                                <button
+                                    type="button"
+                                    onClick={() => onSwitchToForgotPassword && onSwitchToForgotPassword('verify')}
+                                    className="error-action-btn"
+                                >
+                                    <Mail size={14} />
+                                    Resend verification
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
 
             <form onSubmit={handleSubmit} className="auth-form-content">
                 <div className="form-group">
-                    <label htmlFor="username">Usuario</label>
+                    <label htmlFor="username">User Name</label>
                     <div className="input-group">
                         <User size={20} className="input-icon" />
                         <input
@@ -62,7 +82,7 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
                             name="username"
                             value={formData.username}
                             onChange={handleChange}
-                            placeholder="Nombre de usuario"
+                            placeholder=""
                             required
                             className="form-input"
                         />
@@ -70,7 +90,7 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="password">Contraseña</label>
+                    <label htmlFor="password">Password</label>
                     <div className="input-group">
                         <Lock size={20} className="input-icon" />
                         <input
@@ -79,7 +99,7 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            placeholder="Tu contraseña"
+                            placeholder=""
                             required
                             className="form-input"
                         />
@@ -98,17 +118,26 @@ const LoginForm = ({ onSwitchToRegister, onClose }) => {
                     disabled={loading}
                     className="auth-submit-btn"
                 >
-                    {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                    {loading ? 'Logging in...' : 'Log in'}
                 </button>
 
                 <div className="auth-switch">
-                    ¿No tienes cuenta?{' '}
+                    Don't have an account?{' '}
                     <button
                         type="button"
                         onClick={onSwitchToRegister}
                         className="auth-switch-btn"
                     >
-                        Regístrate aquí
+                        Register here
+                    </button>
+                </div>
+                <div className="forgot-password-link">
+                    <button
+                        type="button"
+                        onClick={onSwitchToForgotPassword}
+                        className="forgot-password-btn"
+                    >
+                        Forgotten password?
                     </button>
                 </div>
             </form>

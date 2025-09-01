@@ -3,6 +3,10 @@ import { Search, Plus, Edit, Trash2, Save, X, AlertCircle, CheckCircle, Users, F
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import UserMenu from './components/auth/UserMenu';
+import EmailVerification from './components/auth/EmailVerification';
+import ResetPassword from './components/auth/ResetPassword';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import './styles.css';
 import './auth.css'; // Importar estilos de autenticación
 
@@ -354,7 +358,6 @@ const AppContent = () => {
             <div>
               <h1 className="header-title">Biological Sample Management System</h1>
               <p className="header-subtitle">Manage requesters, requests, metadata, and samples</p>
-              <p className="user-welcome">Bienvenido, {user?.first_name} {user?.last_name || user?.username}!</p>
             </div>
             <div className="header-actions">
               <button
@@ -583,9 +586,20 @@ const AppContent = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <ProtectedRoute>
-        <AppContent />
-      </ProtectedRoute>
+      <Router>
+        <Routes>
+          {/* Rutas públicas para reset password */}
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<EmailVerification />} />
+          
+          {/* Ruta principal (tu app actual) */}
+          <Route path="/*" element={
+            <ProtectedRoute>
+              <AppContent />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 };
